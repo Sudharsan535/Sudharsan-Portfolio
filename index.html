@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alex Rios · XR Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080B14;
+    --panel:#10152B;
+    --panel-alt:#161C3A;
+    --border:rgba(255,255,255,0.09);
+    --border-strong:rgba(255,255,255,0.16);
+    --text:#ECEEF7;
+    --text-muted:#8790AF;
+    --cyan:#49E8D2;
+    --violet:#9D7CFF;
+    --pink:#FF6F91;
+    --amber:#FFB454;
+    --font-display:'Syne', sans-serif;
+    --font-body:'Manrope', sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html{ scroll-padding-top: calc(72px + env(safe-area-inset-top, 0px)); scroll-behavior: smooth; height:100%; }
+  body{ height:100%; }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *, *::before, *::after{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+  a{ color:inherit; }
+  h1,h2,h3{ font-family:var(--font-display); font-weight:700; margin:0; letter-spacing:-0.01em; }
+  p{ margin:0; }
+  img{ max-width:100%; display:block; }
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 24px; }
+  ::selection{ background:var(--cyan); color:#04140F; }
+  :focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; border-radius:4px; }
+
+  /* ---------- GLOBAL PARALLAX BACKGROUND ---------- */
+  #bg-field{
+    position:fixed; inset:0; z-index:-1; overflow:hidden; pointer-events:none;
+  }
+  .bg-depth-plane{
+    position:absolute; left:-20%; top:-10%; width:140%; height:160%;
+    background-image:
+      linear-gradient(rgba(157,124,255,0.14) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(73,232,210,0.11) 1px, transparent 1px);
+    background-size:34px 34px;
+    transform:rotateX(58deg) rotateZ(-6deg);
+    -webkit-mask-image:radial-gradient(ellipse 55% 45% at 50% 20%, black 30%, transparent 72%);
+            mask-image:radial-gradient(ellipse 55% 45% at 50% 20%, black 30%, transparent 72%);
+    animation:drift 18s linear infinite;
+    will-change:transform;
+  }
+  @keyframes drift{ from{ background-position:0 0; } to{ background-position:0 340px; } }
+  .bg-orb{ position:absolute; border-radius:50%; filter:blur(60px); opacity:0.35; will-change:transform; }
+  .bg-orb.o1{ width:420px; height:420px; background:var(--violet); top:8%; left:-8%; }
+  .bg-orb.o2{ width:380px; height:380px; background:var(--cyan); top:38%; right:-10%; opacity:0.22; }
+  .bg-orb.o3{ width:340px; height:340px; background:var(--pink); top:78%; left:12%; opacity:0.18; }
+
+  /* ---------- NAV ---------- */
+  #site-nav{
+    position:fixed; top:env(safe-area-inset-top, 0px); left:0; right:0; z-index:40;
+    background:rgba(8,11,20,0.72);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+  }
+  #site-nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:700; font-size:1.02rem; text-decoration:none; cursor:pointer; background:none; border:none; color:var(--text); padding:0; }
+  .brand-mark{ width:20px; height:20px; border:2px solid var(--cyan); border-radius:5px; transform:rotate(20deg); position:relative; flex-shrink:0; }
+  .brand-mark::after{ content:""; position:absolute; inset:4px; border:2px solid var(--violet); border-radius:3px; }
+  .nav-links{ display:flex; gap:28px; list-style:none; margin:0; padding:0; }
+  .nav-links button{ background:none; border:none; font-family:var(--font-body); cursor:pointer; text-decoration:none; color:var(--text-muted); font-size:0.94rem; font-weight:500; transition:color .15s ease; padding:0; }
+  .nav-links button:hover{ color:var(--text); }
+  @media (max-width: 640px){ .nav-links{ display:none; } }
+
+  /* ---------- HERO ---------- */
+  #home{ padding:calc(140px + env(safe-area-inset-top,0px)) 0 96px; position:relative; }
+  .hero-grid{ display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px; align-items:center; }
+  @media (max-width: 880px){ .hero-grid{ grid-template-columns:1fr; } .hero-visual{ order:-1; height:220px !important; } }
+  .hero-status{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:0.82rem; color:var(--text-muted); font-weight:600;
+    border:1px solid var(--border-strong); border-radius:100px; padding:6px 14px 6px 10px;
+    margin-bottom:22px;
+  }
+  .hero-status::before{ content:""; width:7px; height:7px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); flex-shrink:0; }
+  #hero-name{ font-size:clamp(2.4rem, 5.4vw, 3.8rem); line-height:1.03; }
+  #hero-tagline{ display:block; font-family:var(--font-display); color:var(--violet); font-size:clamp(1.1rem, 2.4vw, 1.4rem); font-weight:600; margin-top:10px; }
+  #hero-statement{ margin-top:22px; max-width:52ch; color:var(--text-muted); font-size:1.08rem; }
+  .hero-cta{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
+  .btn{ font-family:var(--font-body); font-weight:700; font-size:0.95rem; padding:12px 22px; border-radius:9px; text-decoration:none; cursor:pointer; border:1px solid transparent; transition:transform .15s ease, box-shadow .15s ease, background .15s ease; display:inline-flex; align-items:center; gap:8px; }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn-primary{ background:var(--cyan); color:#04140F; }
+  .btn-primary:hover{ box-shadow:0 6px 24px rgba(73,232,210,0.28); }
+  .btn-secondary{ background:transparent; border-color:var(--border-strong); color:var(--text); }
+  .btn-secondary:hover{ border-color:var(--cyan); }
+  .btn-ghost{ background:transparent; border:1px solid var(--border-strong); color:var(--text-muted); font-weight:600; font-size:0.85rem; padding:7px 13px; border-radius:7px; cursor:pointer; }
+  .btn-ghost:hover{ color:var(--text); border-color:var(--text-muted); }
+
+  .hero-visual{ position:relative; height:300px; }
+  .hero-photo-frame{
+    width:220px; height:220px; border-radius:28px; margin:0 auto; position:relative;
+    background:linear-gradient(145deg, rgba(73,232,210,0.5), rgba(157,124,255,0.5));
+    padding:3px;
+  }
+  .hero-photo-frame img{ width:100%; height:100%; object-fit:cover; border-radius:26px; }
+  .hero-fallback{ position:absolute; inset:0; }
+  .anchor-dot{ position:absolute; width:9px; height:9px; border-radius:50%; background:var(--cyan); box-shadow:0 0 14px 3px rgba(73,232,210,0.55); animation:bob 6s ease-in-out infinite; }
+  .anchor-dot.v2{ background:var(--violet); box-shadow:0 0 14px 3px rgba(157,124,255,0.55); animation-duration:7.5s; animation-delay:.6s; }
+  .anchor-dot.v3{ background:var(--pink); box-shadow:0 0 14px 3px rgba(255,111,145,0.5); animation-duration:5.2s; animation-delay:1.2s; }
+  @keyframes bob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-14px); } }
+
+  .reveal{ opacity:0; transform:translateY(14px); animation:reveal .7s cubic-bezier(.2,.7,.3,1) forwards; }
+  .reveal.d1{ animation-delay:.05s; } .reveal.d2{ animation-delay:.15s; } .reveal.d3{ animation-delay:.25s; }
+  @keyframes reveal{ to{ opacity:1; transform:none; } }
+
+  /* ---------- SECTIONS ---------- */
+  section{ padding:88px 0; }
+  .section-label{ font-size:0.86rem; font-weight:700; color:var(--text-muted); display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .section-label::before{ content:""; width:8px; height:8px; background:var(--violet); border-radius:2px; transform:rotate(45deg); flex-shrink:0; }
+  .section-title{ font-size:clamp(1.6rem, 3vw, 2.1rem); max-width:26ch; }
+
+  .about-grid{ display:grid; grid-template-columns:1.3fr 1fr; gap:52px; margin-top:34px; }
+  @media (max-width: 820px){ .about-grid{ grid-template-columns:1fr; } }
+  #about-bio{ color:var(--text-muted); font-size:1.04rem; max-width:60ch; }
+  .skills-panel{ background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:26px; }
+  .skills-panel h3{ font-size:0.95rem; color:var(--text-muted); font-family:var(--font-body); font-weight:700; margin-bottom:16px; }
+  #skills-list{ display:flex; flex-wrap:wrap; gap:9px; }
+  .pill{ background:var(--panel-alt); border:1px solid var(--border); color:var(--text); font-size:0.84rem; padding:6px 13px; border-radius:100px; }
+
+  #projects-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:20px; margin-top:34px; }
+  .project-card{ background:var(--panel); border:1px solid var(--border); border-left:3px solid var(--text-muted); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; transition:border-color .15s ease, transform .15s ease; cursor:pointer; }
+  .project-card:hover{ transform:translateY(-2px); }
+  .project-card.platform-vr{ border-left-color:var(--cyan); }
+  .project-card.platform-ar{ border-left-color:var(--violet); }
+  .project-card.platform-mr{ border-left-color:var(--pink); }
+  .project-card.platform-webxr{ border-left-color:var(--amber); }
+  .project-card.platform-tools{ border-left-color:var(--text-muted); }
+  .card-cover{ height:150px; background-size:cover; background-position:center; background-color:var(--panel-alt); }
+  .card-body{ padding:22px; display:flex; flex-direction:column; gap:12px; flex-grow:1; }
+  .project-badge{ font-size:0.74rem; font-weight:700; color:var(--text-muted); letter-spacing:0.02em; }
+  .project-title{ font-size:1.15rem; text-decoration:none; }
+  .project-title:hover{ color:var(--cyan); }
+  .project-desc{ color:var(--text-muted); font-size:0.94rem; flex-grow:1; }
+  .project-tech{ display:flex; flex-wrap:wrap; gap:6px; }
+  .tech-pill{ font-size:0.74rem; color:var(--text-muted); background:var(--panel-alt); border:1px solid var(--border); padding:3px 9px; border-radius:100px; }
+  .project-links{ display:flex; gap:16px; margin-top:4px; flex-wrap:wrap; }
+  .project-links a{ font-size:0.88rem; font-weight:700; color:var(--cyan); text-decoration:none; border-bottom:1px solid transparent; }
+  .project-links a:hover{ border-bottom-color:var(--cyan); }
+
+  #contact{ text-align:center; }
+  #contact .section-label{ justify-content:center; }
+  #contact-email{ font-family:var(--font-display); font-size:clamp(1.5rem,4vw,2.2rem); text-decoration:none; color:var(--text); border-bottom:2px solid var(--cyan); padding-bottom:4px; }
+  #contact-links{ display:flex; justify-content:center; gap:26px; margin-top:26px; flex-wrap:wrap; }
+  .contact-link{ text-decoration:none; color:var(--text-muted); font-weight:600; font-size:0.95rem; }
+  .contact-link:hover{ color:var(--text); }
+
+  footer{ border-top:1px solid var(--border); padding:28px 0; display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.85rem; flex-wrap:wrap; gap:8px; }
+
+  /* ---------- PROJECT DETAIL PAGE ---------- */
+  #view-project{ padding-top:calc(120px + env(safe-area-inset-top,0px)); padding-bottom:80px; }
+  .pd-back{ margin-bottom:28px; display:inline-flex; }
+  .pd-badge{ font-size:0.82rem; font-weight:700; color:var(--cyan); letter-spacing:0.02em; margin-bottom:10px; }
+  #pd-title{ font-size:clamp(1.9rem, 4.4vw, 2.8rem); }
+  #pd-summary{ color:var(--text-muted); font-size:1.08rem; max-width:64ch; margin-top:14px; }
+  .pd-tech{ display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+  .pd-links{ display:flex; gap:16px; margin-top:22px; flex-wrap:wrap; }
+  #pd-cover-wrap{ margin-top:40px; border-radius:16px; overflow:hidden; border:1px solid var(--border); background:var(--panel); }
+  #pd-cover{ width:100%; max-height:480px; object-fit:cover; }
+  .pd-block{ margin-top:52px; }
+  .pd-block h3{ font-size:0.9rem; color:var(--text-muted); font-family:var(--font-body); font-weight:700; margin-bottom:18px; }
+  #pd-description p{ color:var(--text-muted); font-size:1.02rem; max-width:68ch; margin-bottom:16px; }
+  #pd-gallery{ display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:14px; }
+  #pd-gallery img{ border-radius:10px; border:1px solid var(--border); cursor:zoom-in; height:160px; width:100%; object-fit:cover; transition:transform .15s ease; }
+  #pd-gallery img:hover{ transform:scale(1.02); }
+  #pd-gallery figure{ margin:0; }
+  #pd-gallery figcaption{ font-size:0.8rem; color:var(--text-muted); margin-top:6px; }
+  #pd-code{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:20px; overflow-x:auto; font-family:var(--font-mono); font-size:0.86rem; color:var(--text); white-space:pre; }
+  .pd-nav-row{ display:flex; justify-content:space-between; margin-top:64px; border-top:1px solid var(--border); padding-top:28px; gap:16px; flex-wrap:wrap; }
+  .pd-nav-link{ text-decoration:none; color:var(--text-muted); font-weight:600; font-size:0.92rem; }
+  .pd-nav-link:hover{ color:var(--cyan); }
+  .pd-nav-link .dir{ display:block; font-size:0.74rem; color:var(--text-muted); margin-bottom:4px; text-transform:none; }
+
+  /* lightbox */
+  #lightbox{ position:fixed; inset:0; background:rgba(4,6,12,0.92); z-index:200; display:flex; align-items:center; justify-content:center; padding:40px; cursor:zoom-out; }
+  #lightbox img{ max-width:100%; max-height:100%; border-radius:10px; }
+
+  /* edit toggle */
+  #edit-toggle{
+    position:fixed; right:20px; bottom:calc(20px + env(safe-area-inset-bottom,0px)); z-index:50;
+    width:48px; height:48px; border-radius:50%; border:1px solid var(--border-strong);
+    background:var(--panel); color:var(--text); font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  }
+  #edit-toggle:hover{ border-color:var(--cyan); }
+
+  /* ---------- EDITOR ---------- */
+  #editor{ position:fixed; inset:0; background:var(--bg); z-index:100; overflow-y:auto; }
+  #editor .wrap{ max-width:760px; padding-bottom:80px; }
+  #editor-header{
+    position:sticky; top:0; background:rgba(8,11,20,0.9); backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border); z-index:5;
+    padding-top:calc(16px + env(safe-area-inset-top,0px));
+  }
+  #editor-header .wrap{ display:flex; align-items:center; justify-content:space-between; padding-bottom:16px; gap:12px; flex-wrap:wrap; }
+  #editor-header h2{ font-size:1.2rem; }
+  #save-status{ font-size:0.84rem; color:var(--text-muted); }
+  .editor-actions{ display:flex; gap:10px; align-items:center; }
+
+  .field-group{ margin:30px 0; }
+  .field-group > label.top{ display:block; font-weight:700; font-size:0.92rem; margin-bottom:16px; }
+  label{ display:block; font-size:0.86rem; color:var(--text-muted); font-weight:600; margin-bottom:18px; }
+  input[type=text], input[type=email], input[type=url], textarea, select{
+    display:block; width:100%; margin-top:7px;
+    background:var(--panel); border:1px solid var(--border-strong); border-radius:8px;
+    color:var(--text); font-family:var(--font-body); font-size:0.95rem; padding:10px 12px;
+  }
+  textarea{ resize:vertical; }
+  select{ appearance:none; -webkit-appearance:none; }
+  textarea.mono{ font-family:var(--font-mono); font-size:0.85rem; }
+  .file-row{ display:flex; align-items:center; gap:14px; margin-top:7px; }
+  input[type=file]{ color:var(--text-muted); font-size:0.85rem; }
+  .thumb{ width:56px; height:56px; border-radius:8px; object-fit:cover; border:1px solid var(--border-strong); flex-shrink:0; background:var(--panel-alt); }
+  .thumb-round{ border-radius:50%; }
+  .hint{ font-size:0.8rem; color:var(--text-muted); margin:-10px 0 20px; line-height:1.5; }
+
+  .proj-row{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px; margin-bottom:14px; }
+  .proj-row-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .proj-row-num{ font-weight:700; font-size:0.86rem; color:var(--text-muted); }
+  .link-row-cols{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:520px){ .link-row-cols{ grid-template-columns:1fr; } }
+
+  .gallery-thumbs{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+  .gallery-thumb{ position:relative; width:72px; height:72px; }
+  .gallery-thumb img{ width:100%; height:100%; object-fit:cover; border-radius:8px; border:1px solid var(--border-strong); }
+  .gallery-thumb button{ position:absolute; top:-6px; right:-6px; width:20px; height:20px; border-radius:50%; background:var(--pink); color:#2a0410; border:none; font-size:12px; font-weight:800; cursor:pointer; line-height:1; }
+
+  hr.divider{ border:none; border-top:1px solid var(--border); margin:36px 0; }
+
+  [hidden]{ display:none !important; }
+</style>
+</head>
+<body>
+
+<script type="application/json" id="portfolio-data">{"name":"Sudharsan S","tagline":"XR Developer","status":"Open to contract and full-time XR roles","heroStatement":"I build spatial software for headsets, phones, and browsers — from hand-tracked VR tools to AR wayfinding and multiplayer WebXR rooms.","bio":"I'm an XR developer working across the full stack of spatial computing: real-time rendering, sensor input, and the interaction design that makes a headset feel invisible. Most of my time splits between Unity and native platform SDKs, with a growing interest in bringing full mixed-reality experiences to the open web. I care about frame budgets as much as user flows — a slow app breaks presence faster than a bad idea does.","skills":["Unity","Unreal Engine","OpenXR","WebXR","ARKit","ARCore","C#","C++","Three.js","Shader Programming","Hand Tracking","Spatial Audio","Blender"],"profileImage":"data:image/jpeg;base64,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","projects":[{"id":"aether-sculpt","title":"Aether Sculpt","platform":"VR","summary":"A hand-tracked volumetric sculpting tool for Meta Quest — no controllers, just gesture-based deformation of a live signed-distance mesh at 90fps.","longDescription":"Aether Sculpt lets artists shape 3D forms with their bare hands in VR. It reads hand-tracking data from the Quest's cameras, maps finger positions to a deformation field, and updates a signed-distance-field mesh in real time using compute shaders.\n\nThe hardest part was keeping deformation feedback under one frame of latency so the sculpting felt physical rather than laggy — that meant moving most of the math off the CPU entirely.","coverImage":"","gallery":[],"videoUrl":"","codeSnippet":"// Simplified SDF deformation kernel (HLSL compute shader)\nRWStructuredBuffer<float> field;\n\n[numthreads(8,8,8)]\nvoid CSMain(uint3 id : SV_DispatchThreadID) {\n    float3 p = IndexToWorld(id);\n    float d = field[Index(id)];\n    float brush = sdSphere(p - handPos, brushRadius);\n    field[Index(id)] = opSmoothUnion(d, brush, smoothing);\n}","tech":["Unity","OpenXR","Hand Tracking","Compute Shaders"],"demoUrl":"","repoUrl":""},{"id":"waypoint-ar","title":"Waypoint AR","platform":"AR","summary":"An indoor wayfinding overlay for large venues, using ARKit's scene geometry and LiDAR to occlude routes correctly behind real furniture and walls.","longDescription":"Waypoint AR overlays a walking path on top of the real world inside airports and convention centers. It uses ARKit's scene reconstruction mesh so the path correctly disappears behind pillars, furniture, and walls instead of floating on top of everything.\n\nRoute data comes from a lightweight indoor map format; the app snaps the user's ARKit world position to the nearest map node every few frames to keep the path aligned as they walk.","coverImage":"","gallery":[],"videoUrl":"","codeSnippet":"","tech":["ARKit","RealityKit","Swift","LiDAR"],"demoUrl":"","repoUrl":""},{"id":"nexus-rooms","title":"Nexus Rooms","platform":"WebXR","summary":"A browser-based mixed reality meeting space with no install required — runs in Quest Browser and on desktop, with shared spatial anchors over WebRTC.","longDescription":"Nexus Rooms is a meeting space that opens straight from a link — no app install. It uses the WebXR Device API for headset rendering and falls back to an orbit-camera desktop view for anyone joining from a laptop.\n\nSpatial anchors and avatar positions sync over WebRTC data channels, with a small WebSocket server handling room discovery and reconnects.","coverImage":"","gallery":[],"videoUrl":"","codeSnippet":"","tech":["Three.js","WebXR Device API","WebRTC","WebSockets"],"demoUrl":"","repoUrl":""},{"id":"pulse-haptics-sdk","title":"Pulse Haptics SDK","platform":"Tools","summary":"A cross-platform haptic abstraction layer that maps one authoring format to Quest, PC VR controllers, and Vision Pro's limited feedback channels.","longDescription":"Pulse lets a developer author one haptic \"cue\" — amplitude and frequency curves over time — and have it translated automatically to whatever the target device actually supports, from full waveform playback down to a single on/off pulse.\n\nThe SDK ships as a Unity plugin plus a small native layer per platform, so the authoring format stays identical across every supported headset and controller.","coverImage":"","gallery":[],"videoUrl":"","codeSnippet":"","tech":["C++","C#","Unity Plugin","Swift"],"demoUrl":"","repoUrl":""}],"contact":{"email":"ssudharsan5305@gmail.com","links":[{"label":"GitHub","url":"https://github.com/Sudharsan535"},{"label":"LinkedIn","url":"https://linkedin.com/sudharsanxr"}]}}</script>
+
+<div id="bg-field" aria-hidden="true">
+  <div class="bg-depth-plane" id="bg-depth-plane"></div>
+  <div class="bg-orb o1"></div>
+  <div class="bg-orb o2"></div>
+  <div class="bg-orb o3"></div>
+</div>
+
+<nav id="site-nav">
+  <div class="wrap">
+    <button class="brand" id="nav-brand"><span class="brand-mark"></span><span id="nav-name">Alex Rios</span></button>
+    <ul class="nav-links">
+      <li><button data-section="about">About</button></li>
+      <li><button data-section="work">Work</button></li>
+      <li><button data-section="contact">Contact</button></li>
+    </ul>
+  </div>
+</nav>
+
+<div id="view-home">
+  <main>
+    <section id="home">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="hero-status reveal"><span id="hero-status"></span></div>
+          <h1 id="hero-name" class="reveal d1"></h1>
+          <span id="hero-tagline" class="reveal d1"></span>
+          <p id="hero-statement" class="reveal d2"></p>
+          <div class="hero-cta reveal d3">
+            <button class="btn btn-primary" data-section="work">See the work</button>
+            <button class="btn btn-secondary" data-section="contact">Get in touch</button>
+          </div>
+        </div>
+        <div class="hero-visual reveal d2">
+          <div class="hero-photo-frame">
+            <img id="hero-photo" alt="" hidden>
+          </div>
+          <div class="hero-fallback" id="hero-fallback" aria-hidden="true">
+            <div class="anchor-dot" style="top:8%; left:60%;"></div>
+            <div class="anchor-dot v2" style="top:48%; left:20%;"></div>
+            <div class="anchor-dot v3" style="top:72%; left:66%;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="wrap">
+        <div class="section-label">About</div>
+        <h2 class="section-title">Working across the spatial computing stack</h2>
+        <div class="about-grid">
+          <p id="about-bio"></p>
+          <div class="skills-panel">
+            <h3>Tools &amp; technologies</h3>
+            <div id="skills-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="work">
+      <div class="wrap">
+        <div class="section-label">Selected work</div>
+        <h2 class="section-title">Projects across VR, AR, and the open web</h2>
+        <div id="projects-grid"></div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="wrap">
+        <div class="section-label">Contact</div>
+        <h2 class="section-title">Let's build something spatial</h2>
+        <p style="margin-top:22px;"><a id="contact-email" href="#"></a></p>
+        <div id="contact-links"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap;">
+      <span><span id="footer-name"></span> — XR Developer</span>
+      <span>&copy; <span id="footer-year"></span></span>
+    </div>
+  </footer>
+</div>
+
+<div id="view-project" hidden>
+  <div class="wrap">
+    <button class="btn btn-ghost pd-back" id="pd-back-btn">← Back to work</button>
+    <div class="pd-badge" id="pd-badge"></div>
+    <h1 id="pd-title"></h1>
+    <p id="pd-summary"></p>
+    <div class="pd-tech" id="pd-tech"></div>
+    <div class="pd-links" id="pd-links"></div>
+
+    <div id="pd-cover-wrap" hidden><img id="pd-cover" alt=""></div>
+
+    <div class="pd-block" id="pd-video-block" hidden>
+      <h3>Video</h3>
+      <div id="pd-video-wrap"></div>
+    </div>
+
+    <div class="pd-block" id="pd-description"></div>
+
+    <div class="pd-block" id="pd-gallery-block" hidden>
+      <h3>Gallery</h3>
+      <div id="pd-gallery"></div>
+    </div>
+
+    <div class="pd-block" id="pd-code-block" hidden>
+      <h3>Snippets &amp; notes</h3>
+      <pre id="pd-code"></pre>
+    </div>
+
+    <div class="pd-nav-row">
+      <a class="pd-nav-link" id="pd-prev" href="#"><span class="dir">Previous</span><span id="pd-prev-title"></span></a>
+      <a class="pd-nav-link" id="pd-next" href="#" style="text-align:right;"><span class="dir">Next</span><span id="pd-next-title"></span></a>
+    </div>
+  </div>
+  <footer>
+    <div class="wrap" style="display:flex; justify-content:space-between; width:100%; flex-wrap:wrap;">
+      <span><span id="footer-name2"></span> — XR Developer</span>
+      <span>&copy; <span id="footer-year2"></span></span>
+    </div>
+  </footer>
+</div>
+
+<div id="lightbox" hidden><img id="lightbox-img" alt=""></div>
+
+<button id="edit-toggle" hidden title="Edit portfolio" aria-label="Edit portfolio">&#9998;</button>
+
+<div id="editor" hidden>
+  <div id="editor-header">
+    <div class="wrap">
+      <h2>Edit portfolio</h2>
+      <div class="editor-actions">
+        <span id="save-status"></span>
+        <button type="button" class="btn btn-secondary" id="btn-cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="btn-save">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="field-group" id="gh-connect-group">
+      <label class="top">Publish destination</label>
+      <p id="gh-status" class="hint" style="margin-top:0;"></p>
+      <label>GitHub username or organization
+        <input type="text" id="gh-owner" placeholder="e.g. alex-rios">
+      </label>
+      <label>Repository name
+        <input type="text" id="gh-repo" placeholder="e.g. alex-rios-portfolio">
+      </label>
+      <label>Branch
+        <input type="text" id="gh-branch" value="main">
+      </label>
+      <label>Data file path
+        <input type="text" id="gh-path" value="data.json">
+      </label>
+      <label>Personal access token
+        <input type="password" id="gh-token" placeholder="pastes only into this browser">
+      </label>
+      <p class="hint">Create one at github.com/settings/tokens (Fine-grained token → Repository access: only this repo → Permissions: Contents: Read and write). It's stored only in this browser's local storage, never published to your site or seen by visitors.</p>
+      <div style="display:flex; gap:10px;">
+        <button type="button" class="btn btn-secondary" id="btn-gh-save">Save connection</button>
+        <button type="button" class="btn btn-ghost" id="btn-gh-disconnect">Disconnect</button>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="field-group">
+      <label class="top">Basics</label>
+      <label>Profile photo
+        <div class="file-row">
+          <img class="thumb thumb-round" id="ed-photo-preview" alt="">
+          <input type="file" accept="image/*" id="ed-photo-file">
+        </div>
+      </label>
+      <label>Name
+        <input type="text" id="ed-name">
+      </label>
+      <label>Tagline (shown under your name)
+        <input type="text" id="ed-tagline">
+      </label>
+      <label>Status line (shown as a small badge)
+        <input type="text" id="ed-status">
+      </label>
+      <label>Hero statement (one or two sentences)
+        <textarea id="ed-hero" rows="3"></textarea>
+      </label>
+    </div>
+
+    <hr class="divider">
+
+    <div class="field-group">
+      <label class="top">About</label>
+      <label>Bio
+        <textarea id="ed-bio" rows="5"></textarea>
+      </label>
+      <label>Skills (comma-separated)
+        <input type="text" id="ed-skills">
+      </label>
+    </div>
+
+    <hr class="divider">
+
+    <div class="field-group">
+      <label class="top">Projects</label>
+      <div id="projects-editor"></div>
+      <button type="button" class="btn btn-ghost" id="btn-add-project">+ Add project</button>
+    </div>
+
+    <hr class="divider">
+
+    <div class="field-group">
+      <label class="top">Contact</label>
+      <label>Email
+        <input type="email" id="ed-email">
+      </label>
+      <div id="links-editor"></div>
+      <button type="button" class="btn btn-ghost" id="btn-add-link">+ Add link</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var state = JSON.parse(document.getElementById('portfolio-data').textContent);
+  var draft = null;
+  var artifactApi = null;
+  var canEdit = false;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function qs(sel, root){ return (root||document).querySelector(sel); }
+  function qsa(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+  function escapeHTML(str){
+    return String(str || '').replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; });
+  }
+  function escapeAttr(str){ return escapeHTML(str).replace(/"/g,'&quot;'); }
+  function slugify(str){
+    return String(str||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') || 'project';
+  }
+  function ensureUniqueSlugs(projects){
+    var seen = {};
+    projects.forEach(function(p){
+      var base = slugify(p.title); var slug = base; var n = 2;
+      while(seen[slug]){ slug = base + '-' + n; n++; }
+      seen[slug] = true; p.id = slug;
+    });
+  }
+
+  /* ---------- load live data if this file is hosted alongside a data.json ---------- */
+  async function loadData(){
+    try{
+      var res = await fetch('./data.json?_=' + Date.now(), { cache:'no-store' });
+      if(res.ok){ state = await res.json(); }
+    } catch(e){ /* no data.json here (e.g. previewing in claude.ai) — keep the built-in seed */ }
+  }
+
+  /* ---------- GitHub-backed publishing (for self-hosted static copies) ---------- */
+  function ghConfig(){
+    try{ return JSON.parse(localStorage.getItem('ghConfig') || 'null'); }
+    catch(e){ return null; }
+  }
+  function ghConfigured(){
+    var c = ghConfig();
+    return !!(c && c.owner && c.repo && c.token);
+  }
+  function utf8ToBase64(str){
+    var bytes = new TextEncoder().encode(str);
+    var bin = '';
+    bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  async function githubSave(jsonStr){
+    var cfg = ghConfig();
+    if(!cfg || !cfg.owner || !cfg.repo || !cfg.token){ var e = new Error('not configured'); e.code = 'not_configured'; throw e; }
+    var apiBase = 'https://api.github.com/repos/' + encodeURIComponent(cfg.owner) + '/' + encodeURIComponent(cfg.repo) + '/contents/' + (cfg.path || 'data.json');
+    var headers = {
+      'Authorization': 'Bearer ' + cfg.token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    };
+    var sha = null;
+    var getRes = await fetch(apiBase + '?ref=' + encodeURIComponent(cfg.branch || 'main'), { headers: headers });
+    if(getRes.ok){
+      var current = await getRes.json();
+      sha = current.sha;
+    } else if(getRes.status !== 404){
+      var errBody = await getRes.json().catch(function(){ return {}; });
+      var e2 = new Error(errBody.message || 'GitHub error'); e2.status = getRes.status; throw e2;
+    }
+    var body = { message: 'Update portfolio content', content: utf8ToBase64(jsonStr), branch: cfg.branch || 'main' };
+    if(sha) body.sha = sha;
+    var putRes = await fetch(apiBase, { method:'PUT', headers: Object.assign({ 'Content-Type':'application/json' }, headers), body: JSON.stringify(body) });
+    if(!putRes.ok){
+      var errBody2 = await putRes.json().catch(function(){ return {}; });
+      var e3 = new Error(errBody2.message || 'GitHub error'); e3.status = putRes.status; throw e3;
+    }
+    return putRes.json();
+  }
+  function refreshGhStatus(){
+    var cfg = ghConfig();
+    if(cfg && cfg.owner && cfg.repo){
+      qs('#gh-owner').value = cfg.owner;
+      qs('#gh-repo').value = cfg.repo;
+      qs('#gh-branch').value = cfg.branch || 'main';
+      qs('#gh-path').value = cfg.path || 'data.json';
+      qs('#gh-token').value = '';
+      qs('#gh-token').placeholder = 'saved — leave blank to keep it';
+      qs('#gh-status').textContent = 'Connected to ' + cfg.owner + '/' + cfg.repo + ' (' + (cfg.branch || 'main') + ')';
+    } else {
+      qs('#gh-token').placeholder = 'pastes only into this browser';
+      qs('#gh-status').textContent = 'Not connected — changes will only preview in this browser until you connect GitHub here, or edit via the claude.ai link instead.';
+    }
+  }
+  qs('#btn-gh-save').addEventListener('click', function(){
+    var existing = ghConfig();
+    var token = qs('#gh-token').value.trim() || (existing && existing.token) || '';
+    var cfg = {
+      owner: qs('#gh-owner').value.trim(),
+      repo: qs('#gh-repo').value.trim(),
+      branch: qs('#gh-branch').value.trim() || 'main',
+      path: qs('#gh-path').value.trim() || 'data.json',
+      token: token
+    };
+    if(!cfg.owner || !cfg.repo || !cfg.token){
+      qs('#gh-status').textContent = 'Please fill in username, repository, and a token.';
+      return;
+    }
+    localStorage.setItem('ghConfig', JSON.stringify(cfg));
+    refreshGhStatus();
+    qs('#edit-toggle').hidden = false;
+  });
+  qs('#btn-gh-disconnect').addEventListener('click', function(){
+    localStorage.removeItem('ghConfig');
+    qs('#gh-owner').value = ''; qs('#gh-repo').value = ''; qs('#gh-branch').value = 'main'; qs('#gh-path').value = 'data.json'; qs('#gh-token').value = '';
+    refreshGhStatus();
+  });
+
+  /* ---------- image encode helper (client-side, no network request) ---------- */
+  function fileToDataURL(file, maxDim, quality){
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onerror = function(){ reject(new Error('read failed')); };
+      reader.onload = function(){
+        var img = new Image();
+        img.onerror = function(){ reject(new Error('decode failed')); };
+        img.onload = function(){
+          var w = img.width, h = img.height;
+          var scale = Math.min(1, maxDim / Math.max(w, h));
+          var cw = Math.max(1, Math.round(w * scale));
+          var ch = Math.max(1, Math.round(h * scale));
+          var canvas = document.createElement('canvas');
+          canvas.width = cw; canvas.height = ch;
+          canvas.getContext('2d').drawImage(img, 0, 0, cw, ch);
+          resolve(canvas.toDataURL('image/jpeg', quality || 0.82));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /* ---------- public render ---------- */
+  function renderPublic(s){
+    qs('#nav-name').textContent = s.name;
+    qs('#hero-name').textContent = s.name;
+    qs('#hero-tagline').textContent = s.tagline;
+    qs('#hero-status').textContent = s.status;
+    qs('#hero-statement').textContent = s.heroStatement;
+    qs('#about-bio').textContent = s.bio;
+
+    var photo = qs('#hero-photo');
+    var fallback = qs('#hero-fallback');
+    if(s.profileImage){ photo.src = s.profileImage; photo.hidden = false; fallback.hidden = true; }
+    else { photo.hidden = true; fallback.hidden = false; }
+
+    var skillsEl = qs('#skills-list');
+    skillsEl.innerHTML = '';
+    (s.skills || []).forEach(function(sk){
+      var span = document.createElement('span');
+      span.className = 'pill'; span.textContent = sk;
+      skillsEl.appendChild(span);
+    });
+
+    var grid = qs('#projects-grid');
+    grid.innerHTML = '';
+    (s.projects || []).forEach(function(p){ grid.appendChild(buildProjectCard(p)); });
+
+    var emailEl = qs('#contact-email');
+    emailEl.textContent = s.contact.email;
+    emailEl.href = 'mailto:' + s.contact.email;
+
+    var linksEl = qs('#contact-links');
+    linksEl.innerHTML = '';
+    (s.contact.links || []).forEach(function(l){
+      if(!l.url) return;
+      var a = document.createElement('a');
+      a.href = l.url; a.textContent = l.label; a.target = '_blank'; a.rel = 'noopener';
+      a.className = 'contact-link';
+      linksEl.appendChild(a);
+    });
+
+    qs('#footer-name').textContent = s.name;
+    qs('#footer-year').textContent = new Date().getFullYear();
+    qs('#footer-name2').textContent = s.name;
+    qs('#footer-year2').textContent = new Date().getFullYear();
+  }
+
+  function buildProjectCard(p){
+    var card = document.createElement('div');
+    var platformClass = (p.platform || 'Tools').toLowerCase();
+    card.className = 'project-card platform-' + platformClass;
+    var cover = document.createElement('div');
+    cover.className = 'card-cover';
+    if(p.coverImage){ cover.style.backgroundImage = 'url(' + p.coverImage + ')'; }
+    card.appendChild(cover);
+
+    var body = document.createElement('div');
+    body.className = 'card-body';
+    var linksHtml = '';
+    if(p.demoUrl){ linksHtml += '<a href="' + escapeAttr(p.demoUrl) + '" target="_blank" rel="noopener">Demo</a>'; }
+    if(p.repoUrl){ linksHtml += '<a href="' + escapeAttr(p.repoUrl) + '" target="_blank" rel="noopener">Source</a>'; }
+    body.innerHTML =
+      '<div class="project-badge">' + escapeHTML(p.platform || '') + '</div>' +
+      '<a class="project-title" href="#/project/' + encodeURIComponent(p.id) + '">' + escapeHTML(p.title) + '</a>' +
+      '<p class="project-desc">' + escapeHTML(p.summary) + '</p>' +
+      '<div class="project-tech">' + (p.tech || []).map(function(t){ return '<span class="tech-pill">' + escapeHTML(t) + '</span>'; }).join('') + '</div>' +
+      '<div class="project-links">' + linksHtml + '</div>';
+    card.appendChild(body);
+
+    card.addEventListener('click', function(e){
+      if(e.target.closest('a')) return;
+      location.hash = '#/project/' + encodeURIComponent(p.id);
+    });
+    return card;
+  }
+
+  /* ---------- project detail view ---------- */
+  function findProjectIndex(id){
+    for(var i=0;i<state.projects.length;i++){ if(state.projects[i].id === id) return i; }
+    return -1;
+  }
+
+  function renderVideoLink(url){
+    var block = qs('#pd-video-block');
+    var wrap = qs('#pd-video-wrap');
+    if(!url){ block.hidden = true; wrap.innerHTML = ''; return; }
+    block.hidden = false;
+    wrap.innerHTML = '<a class="btn btn-secondary" target="_blank" rel="noopener" href="' + escapeAttr(url) + '">Watch project video</a>';
+  }
+
+  function renderGallery(gallery){
+    var block = qs('#pd-gallery-block');
+    var grid = qs('#pd-gallery');
+    grid.innerHTML = '';
+    if(!gallery || !gallery.length){ block.hidden = true; return; }
+    block.hidden = false;
+    gallery.forEach(function(g){
+      var fig = document.createElement('figure');
+      var img = document.createElement('img');
+      img.src = g.url; img.alt = g.caption || '';
+      img.addEventListener('click', function(){ openLightbox(g.url); });
+      fig.appendChild(img);
+      if(g.caption){
+        var cap = document.createElement('figcaption');
+        cap.textContent = g.caption;
+        fig.appendChild(cap);
+      }
+      grid.appendChild(fig);
+    });
+  }
+
+  function openLightbox(src){
+    qs('#lightbox-img').src = src;
+    qs('#lightbox').hidden = false;
+  }
+  qs('#lightbox').addEventListener('click', function(){ qs('#lightbox').hidden = true; });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') qs('#lightbox').hidden = true; });
+
+  function renderProjectDetail(p){
+    document.title = p.title + ' \u2014 ' + state.name;
+    qs('#pd-badge').textContent = p.platform;
+    qs('#pd-title').textContent = p.title;
+    qs('#pd-summary').textContent = p.summary;
+
+    var techEl = qs('#pd-tech');
+    techEl.innerHTML = (p.tech || []).map(function(t){ return '<span class="tech-pill">' + escapeHTML(t) + '</span>'; }).join('');
+
+    var linksEl = qs('#pd-links');
+    var linksHtml = '';
+    if(p.demoUrl){ linksHtml += '<a class="btn btn-primary" target="_blank" rel="noopener" href="' + escapeAttr(p.demoUrl) + '">View demo</a>'; }
+    if(p.repoUrl){ linksHtml += '<a class="btn btn-secondary" target="_blank" rel="noopener" href="' + escapeAttr(p.repoUrl) + '">Source code</a>'; }
+    linksEl.innerHTML = linksHtml;
+
+    var coverWrap = qs('#pd-cover-wrap');
+    if(p.coverImage){ qs('#pd-cover').src = p.coverImage; coverWrap.hidden = false; }
+    else { coverWrap.hidden = true; }
+
+    renderVideoLink(p.videoUrl);
+
+    var descEl = qs('#pd-description');
+    descEl.innerHTML = '';
+    var paras = String(p.longDescription || p.summary || '').split(/\n\s*\n/).filter(Boolean);
+    paras.forEach(function(par){
+      var pEl = document.createElement('p');
+      pEl.textContent = par;
+      descEl.appendChild(pEl);
+    });
+
+    renderGallery(p.gallery);
+
+    var codeBlock = qs('#pd-code-block');
+    if(p.codeSnippet){ codeBlock.hidden = false; qs('#pd-code').textContent = p.codeSnippet; }
+    else { codeBlock.hidden = true; }
+
+    var idx = findProjectIndex(p.id);
+    var total = state.projects.length;
+    var prev = state.projects[(idx - 1 + total) % total];
+    var next = state.projects[(idx + 1) % total];
+    var prevEl = qs('#pd-prev'), nextEl = qs('#pd-next');
+    if(total > 1){
+      prevEl.hidden = false; nextEl.hidden = false;
+      prevEl.href = '#/project/' + encodeURIComponent(prev.id);
+      nextEl.href = '#/project/' + encodeURIComponent(next.id);
+      qs('#pd-prev-title').textContent = prev.title;
+      qs('#pd-next-title').textContent = next.title;
+    } else {
+      prevEl.hidden = true; nextEl.hidden = true;
+    }
+  }
+
+  /* ---------- router ---------- */
+  function showView(name){
+    qs('#view-home').hidden = name !== 'home';
+    qs('#view-project').hidden = name !== 'project';
+    if(name === 'home'){ document.title = state.name + ' \u00b7 XR Developer Portfolio'; }
+  }
+  function route(){
+    var m = location.hash.match(/^#\/project\/([^\/?#]+)/);
+    if(m){
+      var idx = findProjectIndex(decodeURIComponent(m[1]));
+      if(idx > -1){ renderProjectDetail(state.projects[idx]); showView('project'); window.scrollTo(0,0); return; }
+    }
+    showView('home');
+  }
+  window.addEventListener('hashchange', route);
+  qs('#pd-back-btn').addEventListener('click', function(){ location.hash = ''; });
+
+  function scrollToSection(id){
+    if(!id){ window.scrollTo({ top:0, behavior: reduceMotion ? 'auto' : 'smooth' }); return; }
+    var el = document.getElementById(id);
+    if(el) el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  }
+  function goToSection(section){
+    if(location.hash.indexOf('#/project/') === 0){
+      location.hash = '';
+      setTimeout(function(){ scrollToSection(section); }, 60);
+    } else {
+      scrollToSection(section);
+    }
+  }
+  qs('#nav-brand').addEventListener('click', function(){ goToSection(null); });
+  qsa('[data-section]').forEach(function(btn){
+    btn.addEventListener('click', function(){ goToSection(btn.dataset.section); });
+  });
+
+  /* ---------- scroll parallax ---------- */
+  var ticking = false;
+  function onScroll(){
+    if(reduceMotion) return;
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      var y = window.scrollY || window.pageYOffset;
+      qs('#bg-depth-plane').style.transform = 'translate3d(0,' + (y * 0.10) + 'px,0) rotateX(58deg) rotateZ(-6deg)';
+      qsa('.bg-orb').forEach(function(o, i){
+        var speed = 0.04 + i * 0.03;
+        o.style.transform = 'translate3d(0,' + (y * speed) + 'px,0)';
+      });
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+
+  /* ---------- editor ---------- */
+  function projectRowHTML(p, i){
+    var platforms = ['VR','AR','MR','WebXR','Tools'];
+    var options = platforms.map(function(opt){
+      return '<option value="' + opt + '"' + (opt === p.platform ? ' selected' : '') + '>' + opt + '</option>';
+    }).join('');
+    var galleryThumbs = (p.gallery || []).map(function(g, gi){
+      return '<div class="gallery-thumb"><img src="' + g.url + '" alt=""><button type="button" class="btn-remove-gallery" data-pindex="' + i + '" data-gindex="' + gi + '">&times;</button></div>';
+    }).join('');
+    return (
+      '<div class="proj-row" data-index="' + i + '">' +
+        '<div class="proj-row-head"><span class="proj-row-num">Project ' + (i+1) + '</span>' +
+          '<button type="button" class="btn-ghost btn-remove-project" data-index="' + i + '">Remove</button></div>' +
+        '<label>Title<input type="text" class="f-title" value="' + escapeAttr(p.title) + '"></label>' +
+        '<label>Platform<select class="f-platform">' + options + '</select></label>' +
+        '<label>Short summary (shown on the project card)<textarea class="f-summary" rows="2">' + escapeHTML(p.summary) + '</textarea></label>' +
+        '<label>Full write-up (shown on the project page — separate paragraphs with a blank line)<textarea class="f-longdesc" rows="5">' + escapeHTML(p.longDescription || '') + '</textarea></label>' +
+        '<label>Cover image<div class="file-row"><img class="thumb" src="' + (p.coverImage || '') + '"><input type="file" accept="image/*" class="f-cover-file" data-pindex="' + i + '"></div></label>' +
+        '<label>Gallery images (add as many as you like)<input type="file" accept="image/*" multiple class="f-gallery-file" data-pindex="' + i + '"><div class="gallery-thumbs" data-pindex="' + i + '">' + galleryThumbs + '</div></label>' +
+        '<label>Video link (opens in a new tab — YouTube, Vimeo, or a hosted video URL)<input type="url" class="f-video" value="' + escapeAttr(p.videoUrl || '') + '"></label>' +
+        '<label>Code snippet / technical notes (optional, shown as-is on the project page)<textarea class="f-code mono" rows="5">' + escapeHTML(p.codeSnippet || '') + '</textarea></label>' +
+        '<label>Tech tags (comma-separated)<input type="text" class="f-tech" value="' + escapeAttr((p.tech||[]).join(', ')) + '"></label>' +
+        '<label>Demo URL<input type="url" class="f-demo" value="' + escapeAttr(p.demoUrl || '') + '"></label>' +
+        '<label>Source / code URL<input type="url" class="f-repo" value="' + escapeAttr(p.repoUrl || '') + '"></label>' +
+      '</div>'
+    );
+  }
+
+  function linkRowHTML(l, i){
+    return (
+      '<div class="link-row proj-row" data-index="' + i + '">' +
+        '<div class="proj-row-head"><span class="proj-row-num">Link ' + (i+1) + '</span>' +
+          '<button type="button" class="btn-ghost btn-remove-link" data-index="' + i + '">Remove</button></div>' +
+        '<div class="link-row-cols">' +
+          '<label>Label<input type="text" class="l-label" value="' + escapeAttr(l.label) + '"></label>' +
+          '<label>URL<input type="url" class="l-url" value="' + escapeAttr(l.url) + '"></label>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function renderProjectRows(){ qs('#projects-editor').innerHTML = draft.projects.map(projectRowHTML).join(''); }
+  function renderLinkRows(){ qs('#links-editor').innerHTML = draft.contact.links.map(linkRowHTML).join(''); }
+
+  qs('#projects-editor').addEventListener('input', function(e){
+    var row = e.target.closest('.proj-row'); if(!row) return;
+    var idx = +row.dataset.index; var p = draft.projects[idx]; if(!p) return;
+    if(e.target.classList.contains('f-title')) p.title = e.target.value;
+    else if(e.target.classList.contains('f-platform')) p.platform = e.target.value;
+    else if(e.target.classList.contains('f-summary')) p.summary = e.target.value;
+    else if(e.target.classList.contains('f-longdesc')) p.longDescription = e.target.value;
+    else if(e.target.classList.contains('f-video')) p.videoUrl = e.target.value;
+    else if(e.target.classList.contains('f-code')) p.codeSnippet = e.target.value;
+    else if(e.target.classList.contains('f-tech')) p.tech = e.target.value.split(',').map(function(s){return s.trim();}).filter(Boolean);
+    else if(e.target.classList.contains('f-demo')) p.demoUrl = e.target.value;
+    else if(e.target.classList.contains('f-repo')) p.repoUrl = e.target.value;
+  });
+
+  qs('#projects-editor').addEventListener('change', function(e){
+    if(e.target.classList.contains('f-cover-file') && e.target.files[0]){
+      var pi = +e.target.dataset.pindex;
+      fileToDataURL(e.target.files[0], 1400, 0.82).then(function(dataUrl){
+        draft.projects[pi].coverImage = dataUrl;
+        renderProjectRows();
+      });
+    }
+    if(e.target.classList.contains('f-gallery-file') && e.target.files.length){
+      var pi2 = +e.target.dataset.pindex;
+      var files = Array.prototype.slice.call(e.target.files);
+      Promise.all(files.map(function(f){ return fileToDataURL(f, 1400, 0.8); })).then(function(urls){
+        urls.forEach(function(u){ draft.projects[pi2].gallery.push({ url:u, caption:'' }); });
+        renderProjectRows();
+      });
+    }
+  });
+
+  qs('#projects-editor').addEventListener('click', function(e){
+    if(e.target.classList.contains('btn-remove-project')){
+      draft.projects.splice(+e.target.dataset.index, 1);
+      renderProjectRows();
+    }
+    if(e.target.classList.contains('btn-remove-gallery')){
+      var pi = +e.target.dataset.pindex, gi = +e.target.dataset.gindex;
+      draft.projects[pi].gallery.splice(gi, 1);
+      renderProjectRows();
+    }
+  });
+
+  qs('#btn-add-project').addEventListener('click', function(){
+    draft.projects.push({ id:'', title:'New project', platform:'VR', summary:'', longDescription:'', coverImage:'', gallery:[], videoUrl:'', codeSnippet:'', tech:[], demoUrl:'', repoUrl:'' });
+    renderProjectRows();
+  });
+
+  qs('#links-editor').addEventListener('input', function(e){
+    var row = e.target.closest('.link-row'); if(!row) return;
+    var idx = +row.dataset.index; var l = draft.contact.links[idx]; if(!l) return;
+    if(e.target.classList.contains('l-label')) l.label = e.target.value;
+    else if(e.target.classList.contains('l-url')) l.url = e.target.value;
+  });
+  qs('#links-editor').addEventListener('click', function(e){
+    if(e.target.classList.contains('btn-remove-link')){
+      draft.contact.links.splice(+e.target.dataset.index, 1);
+      renderLinkRows();
+    }
+  });
+  qs('#btn-add-link').addEventListener('click', function(){
+    draft.contact.links.push({ label:'New link', url:'' });
+    renderLinkRows();
+  });
+
+  qs('#ed-photo-file').addEventListener('change', function(e){
+    if(e.target.files[0]){
+      fileToDataURL(e.target.files[0], 600, 0.85).then(function(dataUrl){
+        draft.profileImage = dataUrl;
+        qs('#ed-photo-preview').src = dataUrl;
+      });
+    }
+  });
+
+  function openEditor(){
+    draft = JSON.parse(JSON.stringify(state));
+    qs('#ed-name').value = draft.name;
+    qs('#ed-tagline').value = draft.tagline;
+    qs('#ed-status').value = draft.status;
+    qs('#ed-hero').value = draft.heroStatement;
+    qs('#ed-bio').value = draft.bio;
+    qs('#ed-skills').value = (draft.skills || []).join(', ');
+    qs('#ed-email').value = draft.contact.email;
+    qs('#ed-photo-preview').src = draft.profileImage || '';
+    renderProjectRows();
+    renderLinkRows();
+    refreshGhStatus();
+    qs('#save-status').textContent = '';
+    qs('#editor').hidden = false;
+    qs('#edit-toggle').hidden = true;
+    window.scrollTo(0,0);
+  }
+  function closeEditor(){
+    qs('#editor').hidden = true;
+    if(canEdit || ghConfigured()) qs('#edit-toggle').hidden = false;
+  }
+
+  function gatherDraft(){
+    draft.name = qs('#ed-name').value.trim() || 'Your Name';
+    draft.tagline = qs('#ed-tagline').value.trim();
+    draft.status = qs('#ed-status').value.trim();
+    draft.heroStatement = qs('#ed-hero').value.trim();
+    draft.bio = qs('#ed-bio').value.trim();
+    draft.skills = qs('#ed-skills').value.split(',').map(function(s){return s.trim();}).filter(Boolean);
+    draft.contact.email = qs('#ed-email').value.trim();
+    ensureUniqueSlugs(draft.projects);
+    return draft;
+  }
+
+  function setStatus(msg){ qs('#save-status').textContent = msg; }
+
+  qs('#btn-cancel').addEventListener('click', closeEditor);
+  qs('#btn-save').addEventListener('click', handleSave);
+
+  function handleSave(){
+    var newState = gatherDraft();
+    state = newState;
+    document.getElementById('portfolio-data').textContent = JSON.stringify(state);
+    renderPublic(state);
+    closeEditor();
+    location.hash = '';
+    route();
+
+    var jsonStr = JSON.stringify(state, null, 2);
+
+    if(artifactApi){
+      setStatus('Saving\u2026');
+      var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      artifactApi.publish(html).then(function(){
+        setStatus('Saved');
+      }).catch(function(err){
+        console.error(err);
+        if(err && err.code === 'conflict'){ setStatus('Someone else saved changes just now \u2014 reloading with their version.'); }
+        else if(err && (err.code === 'not_granted' || err.code === 'not_writer')){ setStatus('You do not have permission to save changes here.'); }
+        else { setStatus('Could not save. Please try again.'); }
+      });
+      return;
+    }
+
+    if(ghConfigured()){
+      setStatus('Publishing to GitHub\u2026');
+      githubSave(jsonStr).then(function(){
+        setStatus('Published \u2014 your site will update within a minute or two.');
+      }).catch(function(err){
+        console.error(err);
+        if(err && err.status === 401){ setStatus('GitHub rejected the token \u2014 check it under Publish destination.'); }
+        else if(err && err.status === 404){ setStatus('Repository, branch, or path not found \u2014 check Publish destination.'); }
+        else { setStatus('Could not publish to GitHub: ' + (err && err.message ? err.message : 'unknown error')); }
+      });
+      return;
+    }
+
+    setStatus('Previewed in this browser only \u2014 connect GitHub above, or edit via the claude.ai link, to publish for visitors.');
+  }
+
+  qs('#edit-toggle').addEventListener('click', openEditor);
+
+  async function init(){
+    await loadData();
+    renderPublic(state);
+    route();
+
+    try{
+      if(window.claude && typeof window.claude.use === 'function'){
+        var user = await window.claude.use('user');
+        canEdit = !!(user && typeof user.canEdit === 'function' && user.canEdit());
+        if(canEdit){ artifactApi = await window.claude.use('artifact'); }
+      }
+    } catch(e){ canEdit = false; }
+
+    qs('#edit-toggle').hidden = !(canEdit || ghConfigured());
+
+    if(location.hash === '#/admin'){
+      location.hash = '';
+      qs('#edit-toggle').hidden = false;
+      openEditor();
+    }
+  }
+
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); }
+  else { init(); }
+})();
+</script>
+</body>
+</html>

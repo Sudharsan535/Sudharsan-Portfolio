@@ -1,0 +1,114 @@
+{
+  "name": "Sudharsan S",
+  "tagline": "XR Developer",
+  "status": "Open to contract and full-time XR roles",
+  "heroStatement": "I build spatial software for headsets, phones, and browsers \u2014 from hand-tracked VR tools to AR wayfinding and multiplayer WebXR rooms.",
+  "bio": "I'm an XR developer working across the full stack of spatial computing: real-time rendering, sensor input, and the interaction design that makes a headset feel invisible. Most of my time splits between Unity and native platform SDKs, with a growing interest in bringing full mixed-reality experiences to the open web. I care about frame budgets as much as user flows \u2014 a slow app breaks presence faster than a bad idea does.",
+  "skills": [
+    "Unity",
+    "Unreal Engine",
+    "OpenXR",
+    "WebXR",
+    "ARKit",
+    "ARCore",
+    "C#",
+    "C++",
+    "Three.js",
+    "Shader Programming",
+    "Hand Tracking",
+    "Spatial Audio",
+    "Blender"
+  ],
+  "profileImage": "data:image/jpeg;base64,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",
+  "projects": [
+    {
+      "id": "aether-sculpt",
+      "title": "Aether Sculpt",
+      "platform": "VR",
+      "summary": "A hand-tracked volumetric sculpting tool for Meta Quest \u2014 no controllers, just gesture-based deformation of a live signed-distance mesh at 90fps.",
+      "longDescription": "Aether Sculpt lets artists shape 3D forms with their bare hands in VR. It reads hand-tracking data from the Quest's cameras, maps finger positions to a deformation field, and updates a signed-distance-field mesh in real time using compute shaders.\n\nThe hardest part was keeping deformation feedback under one frame of latency so the sculpting felt physical rather than laggy \u2014 that meant moving most of the math off the CPU entirely.",
+      "coverImage": "",
+      "gallery": [],
+      "videoUrl": "",
+      "codeSnippet": "// Simplified SDF deformation kernel (HLSL compute shader)\nRWStructuredBuffer<float> field;\n\n[numthreads(8,8,8)]\nvoid CSMain(uint3 id : SV_DispatchThreadID) {\n    float3 p = IndexToWorld(id);\n    float d = field[Index(id)];\n    float brush = sdSphere(p - handPos, brushRadius);\n    field[Index(id)] = opSmoothUnion(d, brush, smoothing);\n}",
+      "tech": [
+        "Unity",
+        "OpenXR",
+        "Hand Tracking",
+        "Compute Shaders"
+      ],
+      "demoUrl": "",
+      "repoUrl": ""
+    },
+    {
+      "id": "waypoint-ar",
+      "title": "Waypoint AR",
+      "platform": "AR",
+      "summary": "An indoor wayfinding overlay for large venues, using ARKit's scene geometry and LiDAR to occlude routes correctly behind real furniture and walls.",
+      "longDescription": "Waypoint AR overlays a walking path on top of the real world inside airports and convention centers. It uses ARKit's scene reconstruction mesh so the path correctly disappears behind pillars, furniture, and walls instead of floating on top of everything.\n\nRoute data comes from a lightweight indoor map format; the app snaps the user's ARKit world position to the nearest map node every few frames to keep the path aligned as they walk.",
+      "coverImage": "",
+      "gallery": [],
+      "videoUrl": "",
+      "codeSnippet": "",
+      "tech": [
+        "ARKit",
+        "RealityKit",
+        "Swift",
+        "LiDAR"
+      ],
+      "demoUrl": "",
+      "repoUrl": ""
+    },
+    {
+      "id": "nexus-rooms",
+      "title": "Nexus Rooms",
+      "platform": "WebXR",
+      "summary": "A browser-based mixed reality meeting space with no install required \u2014 runs in Quest Browser and on desktop, with shared spatial anchors over WebRTC.",
+      "longDescription": "Nexus Rooms is a meeting space that opens straight from a link \u2014 no app install. It uses the WebXR Device API for headset rendering and falls back to an orbit-camera desktop view for anyone joining from a laptop.\n\nSpatial anchors and avatar positions sync over WebRTC data channels, with a small WebSocket server handling room discovery and reconnects.",
+      "coverImage": "",
+      "gallery": [],
+      "videoUrl": "",
+      "codeSnippet": "",
+      "tech": [
+        "Three.js",
+        "WebXR Device API",
+        "WebRTC",
+        "WebSockets"
+      ],
+      "demoUrl": "",
+      "repoUrl": ""
+    },
+    {
+      "id": "pulse-haptics-sdk",
+      "title": "Pulse Haptics SDK",
+      "platform": "Tools",
+      "summary": "A cross-platform haptic abstraction layer that maps one authoring format to Quest, PC VR controllers, and Vision Pro's limited feedback channels.",
+      "longDescription": "Pulse lets a developer author one haptic \"cue\" \u2014 amplitude and frequency curves over time \u2014 and have it translated automatically to whatever the target device actually supports, from full waveform playback down to a single on/off pulse.\n\nThe SDK ships as a Unity plugin plus a small native layer per platform, so the authoring format stays identical across every supported headset and controller.",
+      "coverImage": "",
+      "gallery": [],
+      "videoUrl": "",
+      "codeSnippet": "",
+      "tech": [
+        "C++",
+        "C#",
+        "Unity Plugin",
+        "Swift"
+      ],
+      "demoUrl": "",
+      "repoUrl": ""
+    }
+  ],
+  "contact": {
+    "email": "ssudharsan5305@gmail.com",
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/Sudharsan535"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://linkedin.com/sudharsanxr"
+      }
+    ]
+  }
+}
