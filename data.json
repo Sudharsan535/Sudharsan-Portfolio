@@ -53,6 +53,43 @@
       "tech": [],
       "demoUrl": "",
       "repoUrl": ""
+    },
+    {
+      "id": "pac-man",
+      "title": "Pac Man",
+      "platform": "Tools",
+      "summary": "Introducing Pac Man but in 2.5D instead of 2D",
+      "longDescription": "",
+      "coverImage": "",
+      "gallery": [],
+      "videoUrl": "",
+      "codeSnippet": "",
+      "tech": [
+        "Unity",
+        "Game",
+        "2.5D"
+      ],
+      "demoUrl": "",
+      "repoUrl": "https://github.com/Sudharsan535/Pac-Man-2.5D-Game.git"
+    },
+    {
+      "id": "ar-product-maintenance-and-review",
+      "title": "AR Product Maintenance and Review",
+      "platform": "AR",
+      "summary": "This application is built for manufacturing sector to use this immersive application to maintain the machineries by scanning the code and able to review it on app. This app is built using Unity and Vuforia and the database is managed by Firebase real time data storage",
+      "longDescription": "",
+      "coverImage": "",
+      "gallery": [],
+      "videoUrl": "",
+      "codeSnippet": "",
+      "tech": [
+        "Augmented Reality",
+        "Vuforia",
+        "Unity",
+        "Firebase"
+      ],
+      "demoUrl": "",
+      "repoUrl": "https://github.com/Sudharsan535/AR-Product-Maintenance-and-Review.git"
     }
   ],
   "contact": {
